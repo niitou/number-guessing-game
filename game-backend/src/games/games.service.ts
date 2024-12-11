@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Game } from './entities/game.entity';
+import { Games } from './entities/game.entity';
 import { Repository } from 'typeorm';
-import { Player } from '../players/entities/player.entity';
+import { Players } from '../players/entities/player.entity';
 
 @Injectable()
 export class GamesService {
   constructor(
-    @InjectRepository(Game)
-    private gameRepository: Repository<Game>,
-    @InjectRepository(Player)
-    private playerRepository: Repository<Player>,
+    @InjectRepository(Games)
+    private gameRepository: Repository<Games>,
+    @InjectRepository(Players)
+    private playerRepository: Repository<Players>,
   ) {}
   async create(createGameDto: CreateGameDto) {
     const user = await this.playerRepository.findOne({
@@ -27,5 +27,14 @@ export class GamesService {
       score: createGameDto.score,
     });
     return this.gameRepository.save(new_game);
+  }
+  async getLeaderboard() {
+    const leaderBoard = await this.playerRepository
+      .createQueryBuilder('players')
+      .innerJoinAndSelect('players.games', 'games')
+      .orderBy('games.score')
+      .limit(5)
+      .getMany();
+    return leaderBoard;
   }
 }
