@@ -15,7 +15,7 @@ export class Game {
   @Column({ type: 'int', nullable: false })
   score;
 
-  @ManyToOne(() => Player, (player) => player.player_id)
+  @ManyToOne(() => Player, (player) => player.player_id, { eager: true })
   player_id: Player;
 
   @CreateDateColumn()

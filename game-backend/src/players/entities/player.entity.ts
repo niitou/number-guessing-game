@@ -1,9 +1,7 @@
-import { Game } from 'src/games/entities/game.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -14,9 +12,6 @@ export class Player {
 
   @Column({ unique: true, type: 'varchar' })
   name;
-
-  @OneToMany(() => Game, (game) => game.player_id)
-  games: Game[];
 
   @CreateDateColumn()
   date_created;
