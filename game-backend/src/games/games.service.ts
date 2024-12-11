@@ -29,9 +29,9 @@ export class GamesService {
     return this.gameRepository.save(new_game);
   }
   async getLeaderboard() {
-    const leaderBoard = await this.playerRepository
-      .createQueryBuilder('players')
-      .innerJoinAndSelect('players.games', 'games')
+    const leaderBoard = await this.gameRepository
+      .createQueryBuilder('games')
+      .leftJoinAndSelect('games.player', 'playerId')
       .orderBy('games.score')
       .limit(5)
       .getMany();
