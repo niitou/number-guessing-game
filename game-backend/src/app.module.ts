@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Player } from './players/entities/player.entity';
-import { Game } from './games/entities/game.entity';
+import { Players } from './players/entities/player.entity';
+import { Games } from './games/entities/game.entity';
 import { GamesController } from './games/games.controller';
 import { PlayersController } from './players/players.controller';
 import { GamesService } from './games/games.service';
@@ -22,10 +22,10 @@ require('dotenv').config({ path: __dirname + '/../.env' });
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       logging: true,
-      entities: [Player, Game],
+      entities: [Players, Games],
       synchronize: true, // Don't use in production
     }),
-    TypeOrmModule.forFeature([Game, Player]),
+    TypeOrmModule.forFeature([Games, Players]),
   ],
   controllers: [AppController, GamesController, PlayersController],
   providers: [AppService, GamesService, PlayersService],
