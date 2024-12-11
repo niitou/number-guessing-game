@@ -1,4 +1,4 @@
-import { Player } from 'src/players/entities/player.entity';
+import { Players } from 'src/players/entities/player.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,15 +8,15 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Game {
+export class Games {
   @PrimaryGeneratedColumn({ type: 'int' })
   game_id;
 
   @Column({ type: 'int', nullable: false })
   score;
 
-  @ManyToOne(() => Player, (player) => player.player_id, { eager: true })
-  player_id: Player;
+  @ManyToOne(() => Players, (player) => player.games)
+  player: Players;
 
   @CreateDateColumn()
   date_create;
