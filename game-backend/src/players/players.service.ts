@@ -14,7 +14,11 @@ export class PlayersService {
     return this.playerRepository.save(createPlayerDto);
   }
 
-  findByName(player_name: String) {
-    return this.playerRepository.findOne({ where: { name: player_name } });
+  async findByName(player_name: String) {
+    const user = await this.playerRepository.findOne({
+      where: { name: player_name },
+    });
+    if (!user) return 'Not Found!';
+    return user;
   }
 }
