@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GamesModule } from './games/games.module';
-import { PlayersModule } from './players/players.module';
 import { Player } from './players/entities/player.entity';
 import { Game } from './games/entities/game.entity';
+import { GamesController } from './games/games.controller';
+import { PlayersController } from './players/players.controller';
+import { GamesService } from './games/games.service';
+import { PlayersService } from './players/players.service';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('dotenv').config({ path: __dirname + '/../.env' });
 
@@ -23,10 +25,9 @@ require('dotenv').config({ path: __dirname + '/../.env' });
       entities: [Player, Game],
       synchronize: true, // Don't use in production
     }),
-    PlayersModule,
-    GamesModule,
+    TypeOrmModule.forFeature([Game, Player]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, GamesController, PlayersController],
+  providers: [AppService, GamesService, PlayersService],
 })
 export class AppModule {}
