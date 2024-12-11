@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Param, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Req } from '@nestjs/common';
 import { PlayersService } from './players.service';
 import { CreatePlayerDto } from './dto/create-player.dto';
+import { Request } from 'express';
 
 @Controller('players')
 export class PlayersController {
@@ -11,8 +12,9 @@ export class PlayersController {
     return this.playersService.create(createPlayerDto);
   }
 
-  @Get(':name')
-  findByName(@Param('name') name: String) {
-    return this.playersService.findByName(name);
+  @Get()
+  findByName(@Req() req: Request) {
+    const player_name = req.query.name.toString();
+    return this.playersService.findByName(player_name);
   }
 }
