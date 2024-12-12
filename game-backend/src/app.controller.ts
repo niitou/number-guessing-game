@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -9,11 +9,23 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  // Need to change to post and check if player guesses is lower, higher, or same as the secret number
-  @Get('/game')
-  game() {
-    return this.appService.secret_number;
+  
+  // }
+  @Post('/game')
+  game(@Body() playerGuess: any) {
+    const guess = Number(playerGuess['data']);
+    if (isNaN(guess))
+      return { status: 'ONGOING', message: 'Input is not a number' };
+    if (guess > this.appService.secret_number) {
+      return { status: 'ONGOING', message: "It's lower" };
+    } else if (guess < this.appService.secret_number) {
+      return { status: 'ONGOING', message: "It's higher" };
+    } else {
+      return {
+        status: 'FINISH',
+        message: `Correct, the secret number is ${this.appService.secret_number}`,
+      };
+    }
   }
 
   @Get('/new')
