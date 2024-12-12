@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { setName } from '../reducers/playerNameReducer'
+import { setPlayer } from '../reducers/playerNameReducer'
 import axios from 'axios'
-import { setMessage } from '../reducers/messageReducer'
+import { addMessage, setMessage } from '../reducers/messageReducer'
 
 function WelcomeComponent() {
     const dispatch = useDispatch()
@@ -19,22 +19,28 @@ function WelcomeComponent() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
+        let player_id
         const playerName = e.target.playerName.value
         if (playerName === '') return alert("Username cannot be empty")
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/players?name=${playerName}`)
             .then(res => {
-                if(res.data === "Not Found!"){
-                    console.log("Not Found")
+                if (res.data === "Not Found!") {
                     axios.post(`${process.env.REACT_APP_BACKEND_URL}/players`, {
-                        name : playerName
-                    }).then(res => dispatch(setMessage(`Welcome ${res.data['name']}, this is your first time here`)))
-                }else{
-                    // Get personal best using get
+                        name: playerName
+                    }).then(res => {
+                        dispatch(setMessage(`Welcome ${res.data['name']}, this is your first time here`))
+                        return res
+                    }).then(res => {
+                        player_id = res.data['player_id']
+                        dispatch(setPlayer({ name: playerName, id: player_id }))
+                    })
+                } else {
                     dispatch(setMessage(`Welcome back ${playerName}!`))
+                    if (res.data["score"]) dispatch(addMessage(`, your personal best was ${res.data["score"]}`))
+                    player_id = res.data['player_id']
+                    dispatch(setPlayer({ name: playerName, id: player_id }))
                 }
-            })
-            .catch(err => console.error(err))
-        dispatch(setName(playerName))
+            }).catch(err => console.error(err))
     }
     return (
         <div>
