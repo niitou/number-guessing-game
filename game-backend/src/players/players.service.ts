@@ -15,10 +15,16 @@ export class PlayersService {
   }
 
   async findByName(player_name: String) {
+    const personalBest = await this.playerRepository
+      .createQueryBuilder('players')
+      .leftJoinAndSelect('players.games', 'games')
+      .select('MIN(games.score)', 'score')
+      .where('players.name = :name', { name: player_name })
+      .getRawOne();
     const user = await this.playerRepository.findOne({
       where: { name: player_name },
     });
     if (!user) return 'Not Found!';
-    return user;
+    return { ...user, ...personalBest };
   }
 }
