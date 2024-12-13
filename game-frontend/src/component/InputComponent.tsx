@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { increment } from '../reducers/userScoreReducer'
-import { change } from '../reducers/userInputReducer'
+import { increaseScore } from '../reducers/userScoreReducer'
+import { setPlayerInput } from '../reducers/userInputReducer'
 import axios from 'axios'
 import { setStatus } from '../reducers/gameReducer'
 
@@ -37,8 +37,8 @@ function InputComponent() {
     <div>
       <div>
         <form onSubmit={handleSubmit}>
-          <input type="text" name="user-input" value={userInput} onChange={(e) => dispatch(change(e.target.value))} />
-          <button onClick={() => dispatch(increment())}>Submit</button>
+          <input type="text" name="user-input" value={userInput} onChange={(e) => dispatch(setPlayerInput(e.target.value))} />
+          <button onClick={() => dispatch(increaseScore())}>Submit</button>
         </form>
       </div>
     </div>
