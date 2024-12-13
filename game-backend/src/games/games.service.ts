@@ -23,7 +23,7 @@ export class GamesService {
     }
 
     const new_game = this.gameRepository.create({
-      game_id: user.player_id,
+      player: user.player_id,
       score: createGameDto.score,
     });
     return this.gameRepository.save(new_game);
