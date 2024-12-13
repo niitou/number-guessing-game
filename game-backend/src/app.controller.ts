@@ -9,20 +9,19 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-  
-  // }
+
   @Post('/game')
   game(@Body() playerGuess: any) {
     const guess = Number(playerGuess['data']);
     if (isNaN(guess))
       return { status: 'ONGOING', message: 'Input is not a number' };
     if (guess > this.appService.secret_number) {
-      return { status: 'ONGOING', message: "It's lower" };
+      return { status: 'ONGOING', message: `It's lower than ${guess}` };
     } else if (guess < this.appService.secret_number) {
-      return { status: 'ONGOING', message: "It's higher" };
+      return { status: 'ONGOING', message: `It's higher than ${guess}` };
     } else {
       return {
-        status: 'FINISH',
+        status: 'FINISHED',
         message: `Correct, the secret number is ${this.appService.secret_number}`,
       };
     }
